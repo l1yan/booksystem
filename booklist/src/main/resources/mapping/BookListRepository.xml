@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.booklist.repository.BookListRepository">
+
+    <resultMap id="booklistMap" type="BookList">
+        <id column="id" property="id"></id>
+        <result column="name" property="name"></result>
+        <result column="price" property="price"></result>
+        <result column="author" property="author"></result>
+        <association property="type" select="com.example.booklist.repository.TypeRepository.findById" column="tid"></association>
+    </resultMap>
+    <select id="findAll" resultMap="booklistMap">
+        select * from b_booklist order by id limit #{param1},#{param2}
+    </select>
+
+    <select id="count" resultType="int">
+        select count(*) from b_booklist;
+    </select>
+
+    <select id="findById" parameterType="long" resultMap="booklistMap">
+        select * from b_booklist where id = #{id}
+    </select>
+
+    <insert id="save" parameterType="BookList">
+        insert into b_booklist(name,price,author,tid) values(#{name},#{price},#{author},#{type.id})
+    </insert>
+
+    <update id="update" parameterType="BookList">
+        update b_booklist set name = #{name},price = #{price},author = #{author},tid = #{type.id} where id = #{id}
+    </update>
+
+    <delete id="deleteById" parameterType="long">
+        delete from b_booklist where id = #{id}
+    </delete>
+</mapper>
